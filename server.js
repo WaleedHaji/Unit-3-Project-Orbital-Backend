@@ -13,7 +13,7 @@ dns.setServers(["8.8.8.8", "1.1.1.1"])
 
 // Routes Import
 const authRoutes = require('./routes/auth.routes')
-
+const spaceMissionsRoutes = require('./routes/spaceMissions.routes')
 
 
 // Middleware
@@ -29,7 +29,7 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/auth',authRoutes)
-
+app.use('/missions', spaceMissionsRoutes)
 
 // connect to database and listen on Port 3000
 async function startServer() {
