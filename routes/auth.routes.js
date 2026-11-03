@@ -52,7 +52,7 @@ router.post("/sign-in", async (req, res) => {
         message: "Username and password are required.",
       });
     }
-    const user = await User.findOne({ username:username.toLowerCase().trim() });
+    const user = await User.findOne({ username:username.toLowerCase().trim(), isDeleted: false });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
@@ -64,6 +64,7 @@ router.post("/sign-in", async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
+
 
     // Construct the payload
     const payload = { username: user.username, _id: user._id, role: user.role };
