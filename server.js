@@ -13,6 +13,7 @@ dns.setServers(["8.8.8.8", "1.1.1.1"])
 
 // Routes Import
 const authRoutes = require('./routes/auth.routes')
+const adminRoutes = require('./routes/admin.routes.js')
 
 
 
@@ -29,6 +30,7 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/auth',authRoutes)
+app.use('/admin',adminRoutes)
 
 
 // connect to database and listen on Port 3000
