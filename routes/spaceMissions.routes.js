@@ -3,6 +3,7 @@ const router = require("express").Router();
 
 const SpaceMission = require("../models/SpaceMission");
 const verifyToken = require("../middleware/verifyToken");
+const isAdmin = require("../middleware/isAdmin");
 const validateObjectId = require("../middleware/validateObjectId");
 
 // GET all missions
@@ -30,8 +31,8 @@ router.get("/:id", validateObjectId, async (req, res) => {
   }
 });
 
-// CREATE mission
-router.post("/", verifyToken, async (req, res) => {
+// CREATE mission (Admin only)
+router.post("/", verifyToken, isAdmin, async (req, res) => {
   try {
     const mission = await SpaceMission.create(req.body);
     res.status(201).json(mission);
@@ -40,8 +41,8 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-// UPDATE mission
-router.put("/:id", verifyToken, validateObjectId, async (req, res) => {
+// UPDATE mission (Admin only)
+router.put("/:id", verifyToken, isAdmin, validateObjectId, async (req, res) => {
   try {
     const mission = await SpaceMission.findByIdAndUpdate(
       req.params.id,
@@ -59,8 +60,8 @@ router.put("/:id", verifyToken, validateObjectId, async (req, res) => {
   }
 });
 
-// DELETE mission
-router.delete("/:id", verifyToken, validateObjectId, async (req, res) => {
+// DELETE mission (Admin only)
+router.delete("/:id", verifyToken, isAdmin, validateObjectId, async (req, res) => {
   try {
     const mission = await SpaceMission.findByIdAndDelete(req.params.id);
 
