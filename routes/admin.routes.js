@@ -17,12 +17,12 @@ router.get('/', verifyToken, isAdmin, async (req,res)=>{
     }
 })
 
-
+// Toggle User/Admin roles:
 router.put('/:userId', verifyToken, isAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // 1. Find the target user
+    // Find the target user
     const user = await User.findOne({
       _id: userId,
       isDeleted: { $ne: true }
@@ -34,7 +34,7 @@ router.put('/:userId', verifyToken, isAdmin, async (req, res) => {
       });
     }
 
-    // 2. Prevent an admin from demoting themselves
+    // Prevent an admin from demoting themselves
     if (req.user._id.toString() === user._id.toString() &&
         user.role === "admin") {
       return res.status(403).json({
@@ -42,7 +42,7 @@ router.put('/:userId', verifyToken, isAdmin, async (req, res) => {
       });
     }
 
-    // 3. Check whether this is a demotion
+    // Check whether this is a demotion
     if (user.role === "admin") {
 
       // Count all active administrators
@@ -59,10 +59,10 @@ router.put('/:userId', verifyToken, isAdmin, async (req, res) => {
       }
     }
 
-    // 4. Toggle the role
+    // Toggle the role
     const newRole = user.role === "admin" ? "user" : "admin";
 
-    // 5. Update the user
+    // Update the user
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { role: newRole },
@@ -89,17 +89,17 @@ router.put('/:userId', verifyToken, isAdmin, async (req, res) => {
 
 
 router.put('/:userId', verifyToken, isAdmin, async (req,res)=> {
-    try{
-        const deleteUser = await User.findByIdAndUpdate(
-            userId,
-            { isDeleted: true },
-            { new: true }
-        );
-        res.status(204).json(deleteUser)
-    }
-    catch(err){
-        console.log(err)
-    }
+  try{
+    const deleteUser = await User.findByIdAndUpdate(
+      userId,
+      { isDeleted: true },
+      { new: true }
+    );
+    res.status(204).json(deleteUser)
+  }
+  catch(err){
+    console.log(err)
+  }
 })
 
 module.exports = router;

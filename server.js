@@ -13,12 +13,9 @@ dns.setServers(["8.8.8.8", "1.1.1.1"])
 
 // Routes Import
 const authRoutes = require('./routes/auth.routes')
-<<<<<<< HEAD
 const adminRoutes = require('./routes/admin.routes.js')
 
-=======
 const spaceMissionsRoutes = require('./routes/spaceMissions.routes')
->>>>>>> 4818705315e396ba1556d780eff684a6cf84da15
 
 
 // Middleware
