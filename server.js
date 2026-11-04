@@ -13,13 +13,12 @@ dns.setServers(["8.8.8.8", "1.1.1.1"])
 
 // Routes Import
 const authRoutes = require('./routes/auth.routes')
-<<<<<<< HEAD
 const adminRoutes = require('./routes/admin.routes.js')
 
-=======
 const spaceMissionsRoutes = require('./routes/spaceMissions.routes')
->>>>>>> 4818705315e396ba1556d780eff684a6cf84da15
 
+
+const planetRoutes = require('./routes/planetRoutes')
 
 // Middleware
 app.use(
@@ -34,12 +33,14 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/auth',authRoutes)
-<<<<<<< HEAD
 app.use('/admin',adminRoutes)
 
-=======
 app.use('/missions', spaceMissionsRoutes)
->>>>>>> 4818705315e396ba1556d780eff684a6cf84da15
+
+
+app.use('/planets', planetRoutes)
+
+
 
 // connect to database and listen on Port 3000
 async function startServer() {
