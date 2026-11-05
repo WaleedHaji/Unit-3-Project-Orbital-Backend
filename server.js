@@ -1,4 +1,3 @@
-
 // imports
 const connectToDB = require('./config/db.js')
 const express = require("express")
@@ -14,7 +13,8 @@ dns.setServers(["8.8.8.8", "1.1.1.1"])
 const authRoutes = require('./routes/auth.routes')
 const adminRoutes = require('./routes/admin.routes.js')
 const spaceMissionsRoutes = require('./routes/spaceMissions.routes')
-const astronautsRoutes = require("./routes/astronauts.routes");
+const astronautsRoutes = require("./routes/astronauts.routes")
+const planetRoutes = require('./routes/planetRoutes')
 
 // Middleware
 app.use(
@@ -30,6 +30,7 @@ app.use('/auth', authRoutes)
 app.use('/admin', adminRoutes)
 app.use('/missions', spaceMissionsRoutes)
 app.use('/astronauts', astronautsRoutes)
+app.use('/planets', planetRoutes)
 
 // connect to database and listen on Port 3000
 async function startServer() {
