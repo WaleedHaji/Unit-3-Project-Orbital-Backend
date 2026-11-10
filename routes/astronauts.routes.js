@@ -1,4 +1,3 @@
-
 const router = require("express").Router();
 
 const Astronaut = require("../models/Astronaut");
@@ -9,7 +8,7 @@ const validateObjectId = require("../middleware/validateObjectId");
 // GET all astronauts
 router.get("/", async (req, res) => {
   try {
-    const astronauts = await Astronaut.find();
+    const astronauts = await Astronaut.find().populate("missions", "missionName image launchDate");
     res.status(200).json(astronauts);
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -19,7 +18,7 @@ router.get("/", async (req, res) => {
 // GET one astronaut
 router.get("/:id", validateObjectId, async (req, res) => {
   try {
-    const astronaut = await Astronaut.findById(req.params.id);
+    const astronaut = await Astronaut.findById(req.params.id).populate("missions", "missionName image launchDate");
 
     if (!astronaut) {
       return res.status(404).json({ message: "Astronaut not found" });
