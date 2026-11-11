@@ -9,7 +9,10 @@ const validateObjectId = require("../middleware/validateObjectId");
 // GET all missions
 router.get("/", async (req, res) => {
   try {
-    const missions = await SpaceMission.find();
+    const missions = await SpaceMission.find().populate(
+  "astronauts",
+  "astronautName spaceAgency"
+);
     res.status(200).json(missions);
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -19,7 +22,10 @@ router.get("/", async (req, res) => {
 // GET one mission
 router.get("/:id", validateObjectId, async (req, res) => {
   try {
-    const mission = await SpaceMission.findById(req.params.id);
+    const mission = await SpaceMission.findById(req.params.id).populate(
+  "astronauts",
+  "astronautName spaceAgency"
+);
 
     if (!mission) {
       return res.status(404).json({ message: "Mission not found" });
