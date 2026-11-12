@@ -5,14 +5,15 @@ const SpaceMission = require("../models/SpaceMission");
 const verifyToken = require("../middleware/verifyToken");
 const isAdmin = require("../middleware/isAdmin");
 const validateObjectId = require("../middleware/validateObjectId");
+const upload = require("../middleware/upload");
 
 // GET all missions
 router.get("/", async (req, res) => {
   try {
     const missions = await SpaceMission.find().populate(
-  "astronauts",
-  "astronautName spaceAgency"
-);
+      "astronauts",
+      "astronautName spaceAgency"
+    );
     res.status(200).json(missions);
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -23,9 +24,9 @@ router.get("/", async (req, res) => {
 router.get("/:id", validateObjectId, async (req, res) => {
   try {
     const mission = await SpaceMission.findById(req.params.id).populate(
-  "astronauts",
-  "astronautName spaceAgency"
-);
+      "astronauts",
+      "astronautName spaceAgency"
+    );
 
     if (!mission) {
       return res.status(404).json({ message: "Mission not found" });
@@ -38,9 +39,15 @@ router.get("/:id", validateObjectId, async (req, res) => {
 });
 
 // CREATE mission (Admin only)
-router.post("/", verifyToken, isAdmin, async (req, res) => {
+router.post("/", verifyToken, isAdmin, upload.single("image"), async (req, res) => {
   try {
-    const mission = await SpaceMission.create(req.body);
+    const missionData = { ...req.body };
+
+    if (req.file) {
+      missionData.image = `/uploads/${req.file.filename}`;
+    }
+
+    const mission = await SpaceMission.create(missionData);
     res.status(201).json(mission);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -48,11 +55,17 @@ router.post("/", verifyToken, isAdmin, async (req, res) => {
 });
 
 // UPDATE mission (Admin only)
-router.put("/:id", verifyToken, isAdmin, validateObjectId, async (req, res) => {
+router.put("/:id", verifyToken, isAdmin, validateObjectId, upload.single("image"), async (req, res) => {
   try {
+    const missionData = { ...req.body };
+
+    if (req.file) {
+      missionData.image = `/uploads/${req.file.filename}`;
+    }
+
     const mission = await SpaceMission.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      missionData,
       { new: true, runValidators: true }
     );
 
