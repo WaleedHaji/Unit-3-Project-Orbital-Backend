@@ -4,8 +4,10 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
+const upload = require('../middleware/upload')
 
-router.post("/sign-up", async (req, res) => {
+
+router.post("/sign-up", upload.single('image'), async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -16,6 +18,7 @@ router.post("/sign-up", async (req, res) => {
     const user = await User.create({
       username,
       hashedPassword: await bcrypt.hash(password, 12),
+      profilePicture: req.file?.filename,
     });
 
     const { _id, createdAt, updatedAt } = user;
