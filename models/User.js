@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema(
     isDeleted:{
       type: Boolean,
       default: false
+    },
+    profilePicture:{
+      type:String,
     }
   },
   { timestamps: true },
