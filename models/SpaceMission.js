@@ -30,10 +30,10 @@ const spaceMissionSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-    astronautId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Astronaut",
-    },
+  astronauts: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Astronaut",
+}],
   },
   { timestamps: true }
 );
