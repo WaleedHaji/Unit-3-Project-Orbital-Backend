@@ -102,4 +102,24 @@ router.put('/:userId', verifyToken, isAdmin, async (req,res)=> {
     }
 })
 
+// Count registered users
+router.get('/count', verifyToken, isAdmin, async (req, res) => {
+    try {
+        console.log("Count route reached")
+
+        const totalUsers = await User.countDocuments()
+
+        console.log("Total users:", totalUsers)
+
+        res.status(200).json({ totalUsers })
+
+    } catch (err) {
+        console.log("COUNT ERROR:", err)
+
+        res.status(500).json({
+            message: err.message
+        })
+    }
+})
+
 module.exports = router;
