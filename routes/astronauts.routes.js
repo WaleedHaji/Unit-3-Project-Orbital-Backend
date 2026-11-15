@@ -1,9 +1,11 @@
+
 const router = require("express").Router();
 
 const Astronaut = require("../models/Astronaut");
 const verifyToken = require("../middleware/verifyToken");
 const isAdmin = require("../middleware/isAdmin");
 const validateObjectId = require("../middleware/validateObjectId");
+const upload = require("../middleware/upload");
 
 // GET all astronauts
 router.get("/", async (req, res) => {
@@ -31,9 +33,15 @@ router.get("/:id", validateObjectId, async (req, res) => {
 });
 
 // CREATE astronaut (Admin only)
-router.post("/", verifyToken, isAdmin, async (req, res) => {
+router.post("/", verifyToken, isAdmin, upload.single("image"), async (req, res) => {
   try {
-    const astronaut = await Astronaut.create(req.body);
+    const astronautData = { ...req.body };
+
+    if (req.file) {
+      astronautData.image = `/uploads/${req.file.filename}`;
+    }
+
+    const astronaut = await Astronaut.create(astronautData);
     res.status(201).json(astronaut);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -41,11 +49,17 @@ router.post("/", verifyToken, isAdmin, async (req, res) => {
 });
 
 // UPDATE astronaut (Admin only)
-router.put("/:id", verifyToken, isAdmin, validateObjectId, async (req, res) => {
+router.put("/:id", verifyToken, isAdmin, validateObjectId, upload.single("image"), async (req, res) => {
   try {
+    const astronautData = { ...req.body };
+
+    if (req.file) {
+      astronautData.image = `/uploads/${req.file.filename}`;
+    }
+
     const astronaut = await Astronaut.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      astronautData,
       { new: true, runValidators: true }
     );
 

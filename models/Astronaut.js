@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose')
 
 const astronautSchema = new mongoose.Schema({
@@ -17,6 +16,10 @@ const astronautSchema = new mongoose.Schema({
   debutYear: {
     type: Number,
     required: true,
+  },
+  image: {
+    type: String,
+    required: false,
   },
   missions: [{
     type: mongoose.Schema.Types.ObjectId,

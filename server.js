@@ -26,6 +26,9 @@ app.use(
 app.use(express.json())
 app.use(morgan('dev'))
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use(express.static('public'))
+
+const upload = require('./middleware/upload.js')
 
 // Routes
 app.use('/auth', authRoutes)
