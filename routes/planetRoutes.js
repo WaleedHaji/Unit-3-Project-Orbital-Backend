@@ -5,8 +5,25 @@ const Planet = require('../models/Planet');
 const User=require('../models/User')
 
 // image upload
+// Image upload
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const path = require('path')
+
+const storage = multer.diskStorage({
+
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/')
+    },
+
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname)
+
+        cb(null, `${Date.now()}-${Math.round(Math.random() * 1E9)}${extension}`)
+    }
+
+})
+
+const upload = multer({ storage })
 
 
 // Create a new planet with an uploaded image
@@ -65,15 +82,29 @@ router.delete('/:id', async (req,res)=>{
 // update
 
 
-router.put('/:id', async (req,res)=>{
+router.put('/:id', upload.single('image'), async (req, res) => {
+    try {
 
-    const updatedPlanet = await Planet.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        
-        
-    )
-    res.json(updatedPlanet)
+        const updatedData = {
+            ...req.body
+        }
+
+        // Only update the image if a new one was uploaded
+        if (req.file) {
+            updatedData.image = req.file.filename
+        }
+
+        const updatedPlanet = await Planet.findByIdAndUpdate(
+            req.params.id,
+            updatedData,
+            { new: true, runValidators: true }
+        )
+
+        res.json(updatedPlanet)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
 })
 
 
