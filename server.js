@@ -5,6 +5,7 @@ const app = express()
 const dotenv = require("dotenv").config()
 const morgan = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 const dns = require("dns")
 dns.setServers(["8.8.8.8", "1.1.1.1"])
@@ -24,6 +25,7 @@ app.use(
 )
 app.use(express.json())
 app.use(morgan('dev'))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use(express.static('public'))
 
 const upload = require('./middleware/upload.js')
